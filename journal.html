@@ -1,0 +1,14 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>오늘의 여행 기록 | 사이 SAI</title><link rel="stylesheet" href="subpages.css"></head><body data-page="journal"><div class="cover" style="background-image:url('assets/weather-rain.jpg')"></div><div class="shade"></div><nav><a class="back" href="index.html#solo">← 사이로 돌아가기</a></nav><main class="shell fade-enter"><span class="eye">03 / JOURNAL · XR TRAVEL</span><h1 class="title" data-edit-key="title">오늘의 여행 기록</h1><p class="intro" data-edit-key="intro">내가 왜 바다로 떠났는지, 어떤 풍경을 보았는지. 누구에게도 보여주지 않아도 되는 작은 이야기를 남깁니다.</p><div class="panel"><h2 data-edit-key="journal-heading">여행 노트</h2><p class="muted">이 노트는 브라우저에만 저장되며 타인이나 AI에게 자동으로 공개되지 않습니다.</p><label for="note">지금 어떤 생각을 하고 있나요?</label><textarea id="note" placeholder="오늘은 왜 바다에 가고 싶었을까…"></textarea><div class="controls"><button class="btn primary" id="save">이 브라우저에 저장</button><button class="btn" id="download">텍스트 파일로 내보내기</button><button class="btn" id="erase">기록 지우기</button></div></div><div class="controls"><button class="btn" id="editCopy" aria-pressed="false">문구 편집</button></div><p class="notice" id="notice" role="status"></p><footer>THE DAWN SEA TRAIN · INTERACTIVE CONCEPT ONLY · NO LIVE SERVICE</footer></main><script>
+const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
+function msg(v){$('#notice').textContent=v}
+const name=document.body.dataset.page;
+const editKey='dawn-subpage-'+name;
+const elems=$$('[data-edit-key]');
+try{const saved=JSON.parse(localStorage.getItem(editKey)||'{}');elems.forEach(e=>{if(typeof saved[e.dataset.editKey]==='string')e.innerHTML=saved[e.dataset.editKey]})}catch{}
+$('#editCopy').onclick=()=>{const enabled=$('#editCopy').getAttribute('aria-pressed')!=='true';$('#editCopy').setAttribute('aria-pressed',enabled);elems.forEach(e=>e.contentEditable=String(enabled));$('#editCopy').textContent=enabled?'문구 편집 완료':'문구 편집';if(!enabled){try{localStorage.setItem(editKey,JSON.stringify(Object.fromEntries(elems.map(e=>[e.dataset.editKey,e.innerHTML]))))}catch{}msg('문구를 저장했어요.')}};
+
+const noteKey='dawn-train-private-note';try{$('#note').value=localStorage.getItem(noteKey)||''}catch{}
+$('#save').onclick=()=>{try{localStorage.setItem(noteKey,$('#note').value);msg('이 브라우저에만 기록을 저장했어요.')}catch{msg('로컬 저장을 사용할 수 없어요. 내보내기를 이용하세요.')}};
+$('#download').onclick=()=>{const u=URL.createObjectURL(new Blob([$('#note').value],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download='새벽바다행_여행기록.txt';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('#erase').onclick=()=>{if(!confirm('개인 여행 기록을 지울까요?'))return;$('#note').value='';try{localStorage.removeItem(noteKey)}catch{}msg('기록을 지웠어요.')};
+</script></body></html>

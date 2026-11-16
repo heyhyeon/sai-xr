@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#0b141a" name="theme-color"/>
+<meta content="사이(SAI) — 일상에서 잠깐 벗어나 다른 풍경을 만나는 가상공간. 혼자 여행하고, 우연히 동행하고, 여행 티켓을 모아보세요." name="description"/>
+<meta property="og:title" content="사이 SAI | 일상 밖의 또 다른 공간"/>
+<meta property="og:description" content="원하는 시간에, 원하는 공간으로. 가상 열차에서 혼자 또는 누군가와 보내는 시간."/>
+<meta property="og:type" content="website"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101d23'/%3E%3Cpath d='M19 14V50M45 14V50' stroke='%23e5c6a7' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M32 22V42' stroke='%23f6f0e8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<title>사이 SAI | 일상 밖의 또 다른 공간</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500&display=swap');
+:root{--bg:#0c171c;--fg:#faf4eb;--fog:#bcc5c7;--warm:#e6bea1;--edge:rgba(255,255,255,.22);--sans:'DM Sans','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--serif:'Noto Serif KR',Georgia,serif;--ease:cubic-bezier(.22,1,.36,1)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0;overscroll-behavior:none}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+button,a,input,textarea{font:inherit}a{color:inherit;text-decoration:none}button{color:inherit;cursor:pointer}button:focus-visible,a:focus-visible,[contenteditable]:focus-visible,input:focus-visible{outline:2px solid #e8c7a8;outline-offset:4px}
+::selection{background:#d0a88e;color:#111}
+#app{height:100svh;min-height:420px;overflow:hidden;position:relative;background:#091219}
+.scene{position:absolute;inset:0;z-index:0;opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(22px,0,0) scale(1.018);filter:blur(8px);transition:opacity 1050ms var(--ease),transform 1200ms var(--ease),filter 1050ms var(--ease),visibility 0s linear 1100ms;overflow:hidden;isolation:isolate}
+.scene.active{visibility:visible;z-index:1;pointer-events:auto;opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0);transition:opacity 1050ms var(--ease),transform 1200ms var(--ease),filter 1050ms var(--ease),visibility 0s}
+.scene::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(6,13,18,.85) 0%,rgba(7,16,23,.53) 42%,rgba(7,16,23,.1) 100%),linear-gradient(0deg,rgba(7,14,20,.66),transparent 35%)}
+.scene .backdrop{position:absolute;inset:0;z-index:-3;background-position:center;background-size:cover;filter:saturate(.78);transition:transform 1.3s var(--ease),opacity 900ms var(--ease)}
+.scene .backdrop.film{filter:saturate(.86)}
+.background-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-3;transform:scale(1.11);pointer-events:none;background:#15232c}
+.scene-hero::after{background:linear-gradient(90deg,rgba(5,12,17,.87),rgba(5,12,17,.39) 43%,transparent 80%),linear-gradient(0deg,rgba(5,12,17,.78),transparent 37%)}
+.scene-hero .background-video{object-position:50% 47%}
+.scene-solo::after{background:linear-gradient(90deg,rgba(7,13,18,.94),rgba(7,13,18,.65) 39%,rgba(7,13,18,.12) 90%),linear-gradient(0deg,rgba(4,10,16,.6),transparent 40%)}
+.scene-arrival::after{background:linear-gradient(180deg,rgba(10,17,24,.49),rgba(10,16,22,.15) 49%,rgba(9,14,19,.75))}
+.brand-header{position:fixed;top:0;left:0;right:0;height:80px;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(20px,5vw,76px);border-bottom:1px solid rgba(255,255,255,.11);background:linear-gradient(180deg,rgba(5,10,14,.68),rgba(5,10,14,0));pointer-events:none}
+.brand,.top-nav,.top-actions{pointer-events:auto}
+.brand{font:400 17px/1.35 var(--serif);letter-spacing:-.035em;white-space:nowrap}.brand small{display:block;margin-top:4px;color:#c2b8ad;font:500 9px/1.4 var(--sans);letter-spacing:.22em}
+.top-nav{display:flex;align-items:center;gap:28px}.top-nav button{background:none;border:0;color:rgba(248,248,245,.81);font-size:11px;letter-spacing:.03em;padding:12px 0}.top-nav button:hover,.top-nav button.active{color:var(--warm)}
+.top-actions{display:flex;gap:8px;align-items:center}.icon-btn,.text-btn{border:1px solid rgba(255,255,255,.27);background:#13232bb5;backdrop-filter:blur(10px);padding:10px 13px;border-radius:100px;font-size:11px;color:#f3ede4}.icon-btn:hover,.text-btn:hover{background:#2e4048}.icon-btn[aria-pressed=true]{border-color:#eac6a7;color:#eac6a7}
+.content{position:relative;z-index:4;height:100%;padding:clamp(105px,16vh,170px) clamp(23px,7.2vw,115px) 108px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
+.eyebrow{font-weight:600;font-size:10px;letter-spacing:.25em;color:#edd1bb;line-height:1.65;text-transform:uppercase}
+.serif{font-family:var(--serif);font-weight:400;letter-spacing:-.068em;line-height:1.48;word-break:keep-all}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(43px,5.2vw,90px);margin:19px 0 25px;max-width:900px;text-shadow:0 4px 25px rgba(0,0,0,.22)}
+h2{font-size:clamp(32px,4vw,61px);margin:21px 0 26px;max-width:820px}
+.lead{max-width:490px;color:#e8e6e0;font-size:clamp(13px,1.22vw,17px);line-height:2.1;word-break:keep-all}
+.lead.muted{color:#c5d0d2}.small-label{font-size:10px;letter-spacing:.16em;color:#e2c4a8}
+.hero-content{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-bottom:150px}
+.hero-content h1{margin-top:22px}.hero-content .lead{max-width:390px}
+.hero-stamp{position:absolute;left:clamp(23px,7.2vw,115px);bottom:112px;z-index:3;display:flex;align-items:center;gap:18px;font-size:11px;letter-spacing:.08em;color:#d8d3cd}.hero-stamp strong{font:400 21px/1 var(--serif);letter-spacing:-.02em}.hero-stamp i{display:block;width:78px;height:1px;background:#e8d1bc7b}
+.hero-film-label{position:absolute;right:7vw;bottom:115px;font-size:10px;letter-spacing:.17em;color:#d0bdaf;z-index:2;text-align:right}
+.grid-area{display:grid;grid-template-columns:minmax(0,1fr) minmax(400px,1fr);gap:clamp(28px,5vw,110px);align-items:center}
+.box-panel{padding:clamp(22px,2vw,37px);background:rgba(6,16,21,.49);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(19px);border-radius:3px}
+.kicker{color:var(--warm);font-size:10px;letter-spacing:.2em;font-weight:600}
+.rule{width:58px;height:1px;background:#e7c6ab;margin:22px 0}
+.inline-actions{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0}
+.action-link,.choice,.chip{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(255,255,255,.27);background:rgba(11,23,30,.55);backdrop-filter:blur(6px);border-radius:999px;padding:11px 17px;color:#e6eeed;font-size:12px;transition:background .22s,border-color .22s,transform .22s}.action-link:hover,.choice:hover,.chip:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.52);transform:translateY(-2px)}.action-link::after{content:'↗';font-size:12px;color:#e9cfb2}.chip[aria-pressed=true],.choice[aria-pressed=true]{background:#f1e5d9;color:#17242d;border-color:#f1e5d9}
+.weather-stage{position:absolute;inset:0;z-index:-3;background:#28394a}.weather-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity .85s ease}.weather-stage video.on{opacity:1}.particle-field{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}.particle{position:absolute;top:-25px;opacity:.4;animation:particleFall linear infinite}.particle.rain{width:1px;height:15px;background:linear-gradient(transparent,#dce9ff)}.particle.snow{font-size:12px;color:#f6f9ff}@keyframes particleFall{to{transform:translate3d(-70px,110vh,0)}}
+.weather-controls{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}.micro{font-size:11px;color:#bfc9cc;line-height:1.7}.solo-info{margin-top:14px;color:#c3c9cb;font-size:11px}
+.three-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:30px;max-width:1250px}.story-card{display:flex;flex-direction:column;justify-content:flex-end;position:relative;min-height:clamp(175px,30vh,310px);padding:25px 22px;border:1px solid rgba(255,255,255,.28);overflow:hidden;background:#1c2e37}.story-card::before{content:'';position:absolute;inset:0;background-position:center;background-size:cover;filter:saturate(.6);transition:transform .7s}.story-card:hover::before{transform:scale(1.05)}.story-card::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,12,17,.96),rgba(5,12,17,.1))}.story-card>*{position:relative;z-index:1}.story-card h3{font:400 clamp(19px,1.7vw,27px) var(--serif);margin:11px 0}.story-card p{font-size:12px;line-height:1.8;color:#cdd7d7;margin:0}.story-card span{font-size:10px;color:#e4c6ab;letter-spacing:.14em}.story-card:nth-child(1)::before{background-image:url('assets/passing-fields.jpg')}.story-card:nth-child(2)::before{background-image:url('assets/rainy-cabin.jpg')}.story-card:nth-child(3)::before{background-image:url('assets/weather-snow.jpg')}
+.scene-companion .backdrop{background-image:url('assets/rainy-cabin.jpg');filter:saturate(.78) brightness(.6)}
+.scene-why .backdrop{background-image:url('assets/mist-landscape.jpg')}.scene-why::after{background:linear-gradient(90deg,rgba(6,12,18,.90),rgba(7,18,25,.55) 60%,rgba(7,18,25,.19))}
+.scene-timeline .backdrop{background-image:url('assets/passing-fields.jpg');filter:saturate(.7) blur(4px) brightness(.4)}
+.timeline{margin-top:40px;max-width:1050px}.time-rail{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:relative}.time-rail::before{content:'';position:absolute;top:15px;left:8%;right:8%;border-top:1px solid rgba(255,255,255,.6)}.time-stop{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;position:relative;z-index:1;color:#e8e6e3;padding:0 6px}.time-stop .dot{border:1px solid #f8f5f0;background:#182934;width:15px;height:15px;border-radius:50%;display:block;margin-top:8px}.time-stop.active .dot{background:#f7d3b4;box-shadow:0 0 0 6px #f0bd9840}.time-stop time{font-size:12px;letter-spacing:.08em}.time-stop span:last-child{font-size:11px;color:#c5d0d2;line-height:1.5}.time-state{display:flex;align-items:flex-end;gap:23px;margin-top:40px;max-width:1050px}.time-state-img{height:clamp(132px,24vh,240px);width:45%;border:1px solid #ffffff40;background-size:cover;background-position:center}.time-state-copy{flex:1;padding-bottom:6px}.time-state-copy h3{font:400 clamp(21px,2.4vw,34px) var(--serif);margin:12px 0}.time-state-copy p{font-size:12px;line-height:1.9;color:#c5d3d6;max-width:420px}.time-state-copy .clock{font-size:11px;color:#e7c4a6;letter-spacing:.16em}
+.scene-business .backdrop{background-image:url('assets/weather-clear.jpg');filter:saturate(.58) brightness(.44)}.tabs{display:flex;gap:8px;margin-top:24px}.tab{border:1px solid #ffffff55;border-radius:999px;background:#13212a77;color:#f1f0eb;padding:11px 22px;font-size:12px}.tab[aria-selected=true]{background:#efe7dc;color:#16252d}.business-grid{margin-top:25px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;max-width:1180px}.biz-card{min-height:clamp(180px,27vh,300px);border:1px solid #ffffff36;background:#0b1d28b8;padding:23px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}.biz-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(.58) saturate(.55)}.biz-card::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#08161ded,transparent 82%);z-index:-1}.biz-card .kicker{font-size:10px}.biz-card h3{font:400 clamp(20px,1.9vw,27px) var(--serif);margin:9px 0}.biz-card p{font-size:12px;line-height:1.7;color:#d3dddc;margin:0}
+.scene-arrival .backdrop{background-image:url('assets/arrival-clean.jpg');background-position:center;filter:saturate(.74)}.arrival-copy{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.arrival-copy h2{max-width:900px;font-size:clamp(39px,5.8vw,94px);text-shadow:0 5px 30px #0006}.arrival-copy p{max-width:650px;font-size:clamp(13px,1.2vw,17px);line-height:2.05;color:#f4eee6}.arrive-again{margin-top:21px}
+.scene-dots{position:fixed;z-index:90;bottom:clamp(19px,3vh,35px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:15px;padding:12px 23px;border:1px solid #ffffff24;border-radius:100px;background:rgba(7,17,25,.68);backdrop-filter:blur(18px);box-shadow:0 10px 50px #0005}.scene-dots button{width:10px;height:10px;padding:0;border-radius:100%;border:1px solid #f5e9dc90;background:transparent;position:relative;transition:background .3s,transform .3s}.scene-dots button[aria-current=step]{background:#efcfb2;transform:scale(1.25);border-color:#efcfb2;box-shadow:0 0 0 4px #efcfb235}.scene-dots button::before{content:attr(data-name);position:absolute;bottom:23px;left:50%;transform:translateX(-50%);white-space:nowrap;opacity:0;pointer-events:none;padding:7px 9px;background:#10232c;font-size:10px;border:1px solid #ffffff30;border-radius:4px;transition:opacity .18s}.scene-dots button:hover::before,.scene-dots button:focus-visible::before{opacity:1}
+.change-scene{position:fixed;z-index:89;top:50%;width:43px;height:43px;transform:translateY(-50%);background:#0c1b24a8;border:1px solid #ffffff44;border-radius:50%;font-size:22px;backdrop-filter:blur(12px)}.change-scene:hover{background:#ffffff34}.change-scene.prev{left:18px}.change-scene.next{right:18px}.progress-track{position:fixed;bottom:0;left:0;right:0;height:2px;background:#ffffff20;z-index:100}.progress-track div{background:#efcfb2;height:100%;width:14.285%;transition:width 850ms ease}
+.scene-count{position:fixed;right:clamp(25px,5vw,75px);bottom:40px;z-index:89;font-size:11px;letter-spacing:.17em;color:#c0cbd0}.scene-count strong{font-weight:500;color:#f0ddc9}.hint{position:fixed;left:clamp(23px,5vw,76px);bottom:42px;z-index:89;font-size:10px;letter-spacing:.08em;color:#c1c9c5}
+.edit-toast{position:fixed;z-index:200;left:50%;top:93px;transform:translateX(-50%) translateY(-10px);background:#e7e0d4;color:#1b2e36;padding:13px 20px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border-radius:3px;box-shadow:0 6px 24px #0007}.edit-toast.show{opacity:1;transform:translateX(-50%)}body.edit-mode [data-edit-key]{outline:1px dashed #f2bd91;outline-offset:4px;cursor:text}body.edit-mode [data-edit-key]:focus{outline:2px solid #ffe0ae;background:#19323a5e}
+.edit-export{position:fixed;right:5vw;top:93px;z-index:90;display:none;gap:7px}body.edit-mode .edit-export{display:flex}.edit-export button{padding:9px 13px;border:1px solid #ffffff55;background:#11232be5;color:#fff;font-size:11px;border-radius:4px}
+@media (max-width:1050px){.top-nav{display:none}.grid-area{grid-template-columns:1fr}.three-cards{grid-template-columns:repeat(3,1fr)}.content{padding-left:7vw;padding-right:7vw}.hero-content{padding-bottom:120px}.story-card{padding:20px}.business-grid{gap:9px}.biz-card{padding:18px}}
+@media (max-width:700px){.brand-header{height:67px;padding:0 18px}.brand{font-size:15px}.brand small{font-size:8px}.top-actions .text-btn{padding:8px 9px;font-size:10px}.top-actions .icon-btn{padding:8px 10px}.content{padding:92px 23px 103px}.hero-content{justify-content:flex-end;padding-bottom:150px}.hero-content h1{font-size:clamp(37px,10vw,61px);line-height:1.5}.hero-content .lead{font-size:13px;max-width:290px}.hero-film-label{display:none}.hero-stamp{bottom:108px;left:24px;font-size:10px;gap:9px}.hero-stamp strong{font-size:15px}.hero-stamp i{width:25px}.background-video{transform:scale(1.35);object-position:center}.scene-hero::after{background:linear-gradient(0deg,#071017ef 0%,#07101780 42%,transparent 100%)}.scene-solo::after{background:linear-gradient(0deg,#071017dd,#07101788)}.scene-count,.hint{display:none}.change-scene{width:32px;height:32px;top:auto;bottom:24px;transform:none;font-size:17px}.change-scene.prev{left:18px}.change-scene.next{right:18px}.scene-dots{bottom:22px;gap:12px;padding:11px 16px}.scene-dots button{width:9px;height:9px}.section-title{font-size:37px}h2{font-size:clamp(30px,8.3vw,47px);margin:15px 0 20px}.lead{font-size:13px;line-height:1.95}.three-cards{grid-template-columns:1fr;gap:9px;margin-top:17px}.story-card{min-height:119px;padding:16px 18px}.story-card h3{font-size:20px;margin:6px 0}.story-card p{font-size:11px;line-height:1.5}.inline-actions{margin:17px 0}.action-link,.choice,.chip{padding:10px 13px;font-size:11px}.weather-controls{margin-top:17px}.time-rail{gap:0}.time-stop{gap:7px;padding:0 2px}.time-stop time{font-size:10px}.time-stop span:last-child{font-size:9px}.time-state{gap:15px;flex-direction:column;align-items:stretch;margin-top:20px}.time-state-img{height:18vh;max-height:160px;width:100%}.time-state-copy h3{margin:6px 0;font-size:21px}.time-state-copy p{font-size:11px}.business-grid{grid-template-columns:1fr;gap:8px;margin-top:14px}.biz-card{min-height:100px;padding:14px 17px}.biz-card h3{margin:5px 0;font-size:19px}.biz-card p{font-size:11px;line-height:1.5}.tabs{margin-top:16px}.scene-business .content,.scene-companion .content{padding-top:82px}.scene-timeline .content{padding-top:86px}.arrival-copy{padding-bottom:100px}.arrival-copy h2{font-size:clamp(36px,10vw,62px)}.edit-export{right:8px;top:72px}}
+@media (max-height:670px){.content{padding-top:100px}.hero-content{justify-content:flex-end;padding-bottom:115px}.hero-stamp{bottom:83px}.story-card{min-height:155px}.business-grid{margin-top:12px}.biz-card{min-height:140px}}
+@media (prefers-reduced-motion:reduce){.scene,.scene.active,.weather-stage video,.particle,.progress-track div{transition-duration:0.01ms!important;animation:none!important}.background-video{transform:none!important}}
+
+/* v5 - retain the original cinematic window composition while expanding the films */
+.background-video.support-video{transform:scale(1.07);filter:saturate(.83) contrast(1.03);opacity:.8}
+.scene-why .support-video{opacity:.53}.scene-companion .support-video{opacity:.66}.scene-business .support-video{opacity:.42}.scene-arrival .support-video{opacity:.85}
+.scene-solo::after{background:linear-gradient(90deg,rgba(5,12,17,.89),rgba(8,20,29,.5) 48%,rgba(8,20,29,.08) 100%),linear-gradient(0deg,rgba(5,12,17,.62),transparent 42%)}
+.scene-solo .weather-stage video{transform:scale(1.03)}.scene-solo .content{z-index:5}
+.quiet-action{background:rgba(8,15,20,.24);border-color:rgba(255,255,255,.16)}
+.time-state-img{position:relative;overflow:hidden;background:#1b2f38}.time-state-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .55s}.time-state-img video.has-video{opacity:1}.film-corner{position:absolute;left:12px;bottom:11px;z-index:2;color:#e6e0d7;font-size:9px;letter-spacing:.18em;text-shadow:0 2px 10px #000a}
+.film-open{border-color:rgba(238,205,173,.42);color:#edd5bb}
+.experience-dialog{position:fixed;inset:0;z-index:160;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(3,9,13,.77);backdrop-filter:blur(18px)}.experience-dialog.open{display:flex}
+.dialog-box{position:relative;width:min(710px,96vw);max-height:calc(100svh - 40px);overflow:auto;background:#111f28;border:1px solid rgba(244,225,207,.28);padding:clamp(22px,4.4vw,46px);box-shadow:0 24px 120px #0008}
+.dialog-box h2{font-size:clamp(29px,3.4vw,46px);margin:12px 0 14px}.dialog-box p{font-size:13px;line-height:1.95;color:#bdcbd0}.dialog-dismiss{position:absolute;right:18px;top:18px;border:1px solid #ffffff50;background:#ffffff14;color:#fff;border-radius:100%;width:38px;height:38px;font-size:23px}.ticket-field{margin:27px 0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ticket-field label{font-size:10px;letter-spacing:.1em;color:#c9c9c4;display:flex;flex-direction:column;gap:8px}.ticket-field select{background:#20343c;border:1px solid #c0c7cb49;color:#fff;font-family:inherit;padding:12px 10px;outline-offset:2px}.ticket-detail{display:flex;gap:18px;flex-wrap:wrap;padding:20px 0;border-top:1px solid #ffffff22;border-bottom:1px solid #ffffff22}.ticket-detail span{display:flex;flex-direction:column;gap:5px;min-width:70px;color:#b1c4c7;font-size:10px}.ticket-detail b{font:400 20px var(--serif);color:#f5e7d9}.ticket-opt{display:flex;gap:10px;align-items:center;margin:18px 0 24px;font-size:13px;line-height:1.7;color:#e6e2dc}.ticket-opt input{accent-color:#e7bd9b;width:17px;height:17px}.dialog-confirm{background:#e9d4c0;color:#17242c;border:0;padding:13px 23px;cursor:pointer;border-radius:100px;font-size:12px;letter-spacing:.02em}.ticket-output{margin:19px 0 0;border:1px dashed #ead2bf91;padding:17px 20px;background:#e2cfbd10}.ticket-output strong{font:400 19px var(--serif);display:block;margin-bottom:6px}.ticket-output small{font-size:10px;color:#b5c6ce}
+.film-dialog .dialog-box{width:min(1020px,97vw);padding:0;overflow:hidden;background:#07141a}.film-box{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(258px,1fr);min-height:min(560px,78svh)}.film-display{position:relative;background:#162732;min-height:360px}.film-display video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.film-display::after{content:'';pointer-events:none;position:absolute;inset:0;background:linear-gradient(0deg,#07131a9c 0%,transparent 40%)}.film-caption{position:absolute;bottom:24px;left:27px;right:20px;z-index:2}.film-caption .kicker{letter-spacing:.18em}.film-caption h3{font:400 clamp(24px,3vw,40px) var(--serif);margin:12px 0 4px}.film-caption p{font-size:11px;color:#d5dbda;line-height:1.7;margin:0}.film-selector{padding:35px 24px 30px;overflow:auto}.film-selector .eyebrow{display:block;margin-bottom:18px}.film-selector button{display:flex;align-items:center;gap:12px;text-align:left;border:0;border-top:1px solid #ffffff20;background:transparent;width:100%;padding:13px 3px;color:#f6eee7;cursor:pointer}.film-selector button:last-of-type{border-bottom:1px solid #ffffff20}.film-selector button.active{color:#edc5a2}.film-selector button span{display:block;color:#97adb8;font-size:10px;min-width:23px}.film-selector button strong{font-size:12px;font-weight:400}.film-note{color:#9eafb5;font-size:10px;line-height:1.75;margin:20px 0 0}
+.tool-options{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0 14px}.tool-options button{background:#253740;border:1px solid #ffffff45;padding:12px 18px;border-radius:100px;color:#e6e6e2;font-size:12px;cursor:pointer}.tool-options button[aria-pressed=true]{background:#f0d8c0;color:#14252e}.tool-image{width:100%;max-height:310px;object-fit:cover;display:block;border:1px solid #ffffff30;margin:18px 0}.journal-area{width:100%;min-height:140px;background:#172931;color:#fff;border:1px solid #ffffff38;padding:16px 17px;margin:15px 0 19px;resize:vertical;font:13px/1.85 var(--sans)}.film-status{position:absolute;top:17px;left:22px;z-index:3;background:#08161bc2;border:1px solid #ffffff20;padding:7px 11px;font-size:10px;color:#d3dde1;letter-spacing:.06em}
+@media(max-width:780px){.film-box{display:flex;flex-direction:column;max-height:calc(100svh - 30px);overflow:auto}.film-display{min-height:35svh}.film-selector{padding:20px}.film-selector button{display:inline-flex;width:48%;gap:6px;border-top:0;padding:10px 4px}.film-note{margin:10px 0}.top-actions .film-open{font-size:10px}.ticket-field{grid-template-columns:1fr 1fr}.dialog-box{padding:26px 21px}.film-dialog .dialog-box{padding:0}.scene-hero .hero-film-label{display:none}}
+@media(max-width:570px){.brand small{display:none}.top-actions{gap:5px;flex-shrink:0}.top-actions .text-btn{white-space:nowrap;padding:9px 9px;font-size:10px}.brand-header{gap:8px}#motionToggle{display:none}.ticket-field{grid-template-columns:1fr 1fr}.ticket-field label:first-child{grid-column:span 2}.scene-hero .hero-stamp{bottom:80px}.hero-content .inline-actions{gap:8px}.quiet-action{display:none}}
+
+/* Simplified masthead: no project title above the cinematic window */
+.brand-header{justify-content:flex-end}
+.top-nav{margin-right:auto}
+
+/* v6 – Optional AI memory and collectible tickets.  Existing cinematic window stays intact. */
+.archive-open{white-space:nowrap;display:inline-flex;gap:7px;align-items:center}
+#ticketCount{font-size:10px;color:#15242b;background:#e8d4c1;border-radius:999px;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
+.ai-inline-status{margin:15px 0 24px;padding:9px 14px;border-left:2px solid #e7c2a4;background:rgba(8,22,29,.62);font-size:11px;color:#d7e3e3;max-width:475px;line-height:1.8}
+.ai-inline-status .ai-dot{display:inline-block;height:6px;width:6px;background:#a0a9a9;border-radius:50%;vertical-align:middle;margin-right:7px}
+.ai-inline-status.is-on .ai-dot{background:#96d0d2;box-shadow:0 0 0 4px #95c9c421}
+.companion-ai-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0 4px}.companion-ai-row span{font-size:11px;color:#beced0}
+.arrival-actions{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 10px}.arrival-actions .ticket-primary{border-color:#edd2b6;background:#e9d4c0;color:#192730}.arrival-actions .ticket-primary::after{color:#192730}
+#startTicketJourney{margin-top:13px}
+.ai-dialog .dialog-box{width:min(760px,96vw);background:linear-gradient(143deg,#182f37,#0d1b24 62%)}
+.ai-dialog h2{max-width:680px}.ai-board-line{border-top:1px solid #ffffff24;border-bottom:1px solid #ffffff24;padding:19px 0;margin:23px 0;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.ai-board-line>div{display:flex;flex-direction:column;gap:9px}.ai-board-line strong{font-size:15px;font-weight:500}.ai-memory-label{display:block;margin-bottom:11px;color:#dfe5e6;font-size:12px}
+.ai-memory-input{width:100%;min-height:110px;resize:vertical;border:1px solid #ffffff4b;border-radius:3px;display:block;padding:13px 15px;background:#0b1a22;color:#f0f5f3;line-height:1.8;font-size:13px}
+.ai-memory-input::placeholder{color:#91a1a9}.ai-memory-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0 30px}.ai-memory-actions .micro{font-size:10px}
+.ai-history-head{border-top:1px solid #ffffff28;padding-top:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}.ai-history-head strong{font-weight:500;font-size:13px}
+.archive-text-action{background:none;border:0;padding:6px 0;color:#ddbda2;font-size:11px;cursor:pointer;text-decoration:underline;text-decoration-color:#f0d3ae6b;text-underline-offset:4px}
+.ai-memory-history{max-height:210px;overflow:auto;margin-top:13px;display:flex;flex-direction:column;gap:9px}.ai-note{background:#ffffff09;border:1px solid #ffffff18;padding:13px 15px}.ai-note time{font-size:10px;color:#b6bcc3;letter-spacing:.04em}.ai-note p{white-space:pre-wrap;margin:6px 0 0;font-size:12px;line-height:1.8;color:#f0eae4}
+.ai-empty{background:#ffffff07;border:1px dashed #ffffff32;padding:18px;color:#bcc8cb;font-size:12px}.privacy-note{border-top:1px solid #ffffff1c;padding-top:12px;margin-top:19px!important;color:#94a8b2!important;font-size:10px!important;line-height:1.7!important}
+.archive-dialog .dialog-box{width:min(1050px,97vw);background:linear-gradient(130deg,#13262d 0%,#0b1820 64%);padding:clamp(22px,4vw,50px)}
+.archive-header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-right:45px;border-bottom:1px solid #ffffff20;padding-bottom:22px}.archive-header h2{margin:11px 0 11px}.archive-header p{margin:0!important}
+.archive-total{text-align:right;display:flex;flex-direction:column;gap:2px}.archive-total strong{font:400 clamp(44px,5vw,76px)/1 var(--serif);color:#e3bfa2}.archive-total span{font-size:9px;letter-spacing:.2em;color:#b3c1c5;white-space:nowrap}
+.ticket-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-height:min(52vh,550px);overflow-y:auto;margin:24px 0 20px;padding:2px 4px 4px 0;align-items:start}
+.ticket-empty{grid-column:1/-1;min-height:245px;border:1px dashed #dbc6b160;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;background:rgba(255,255,255,.03);padding:26px}.ticket-empty .empty-ticket-symbol{font:400 63px/1 var(--serif);color:#bba58c;transform:rotate(-12deg)}.ticket-empty strong{font:400 24px var(--serif)}.ticket-empty p{margin:0;font-size:12px}.ticket-empty button{margin-top:11px}
+.ticket-entry{display:grid;grid-template-columns:1fr 55px;min-height:238px;background:linear-gradient(140deg,rgba(255,255,255,.32),transparent 57%),repeating-linear-gradient(135deg,#ede2d0 0px,#ede2d0 3px,#ebdfce 4px,#ebdfce 6px);color:#273535;border:1px solid #f5e9d8;box-shadow:0 13px 34px #0003;position:relative;overflow:hidden}
+.ticket-main{padding:21px 22px 21px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-width:0}
+.ticket-topline{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #34464a36;padding-bottom:10px}.ticket-topline b{font-size:15px;letter-spacing:.2em;font-weight:600}.ticket-topline span{font-size:9px;letter-spacing:.1em;color:#687677}
+.ticket-route{display:flex;flex-direction:column;gap:7px}.ticket-route span{font-size:9px;color:#506469;letter-spacing:.08em}.ticket-route strong{font:400 clamp(22px,2.5vw,33px) var(--serif);line-height:1.4;overflow-wrap:anywhere}.ticket-route p{margin:0!important;font-size:12px!important;color:#3c5157!important;line-height:1.65!important}
+.ticket-meta{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;border-top:1px solid #34464a36;padding-top:13px}.ticket-meta div{display:flex;flex-direction:column;gap:5px}.ticket-meta small{font-size:9px;color:#506469;letter-spacing:.06em}.ticket-meta b{font-size:11px;font-weight:600}
+.ticket-stub{display:flex;justify-content:center;align-items:center;writing-mode:vertical-rl;letter-spacing:.24em;gap:12px;color:#50656a;border-left:2px dashed #78868a60;font-size:10px;font-weight:600;background:#d6d1c422}
+.ticket-remove{position:absolute;right:59px;bottom:6px;border:0;background:transparent;color:#64777d;padding:3px 4px;font-size:10px;text-decoration:underline;cursor:pointer}
+.archive-bottom{display:flex;justify-content:space-between;gap:16px;align-items:center;border-top:1px solid #ffffff22;padding-top:17px}.archive-bottom>span{font-size:10px;color:#a7b4b8;line-height:1.6}.archive-bottom>div{display:flex;gap:15px}
+@media(max-width:750px){.ticket-collection{grid-template-columns:1fr;max-height:48vh}.archive-header{padding-right:24px}.archive-header p{font-size:11px!important}.archive-total strong{font-size:46px}.archive-total span{font-size:8px}.ticket-entry{min-height:223px}.archive-bottom{flex-direction:column;align-items:flex-start}.archive-bottom>div{gap:20px}.ai-board-line{flex-direction:column;align-items:flex-start}.arrival-actions{margin-top:22px}}
+@media(max-width:570px){.archive-open{font-size:10px!important}.scene-solo .content{padding-top:83px}.scene-solo .inline-actions{gap:7px}.scene-solo .action-link{font-size:10px;padding:9px 11px}.scene-arrival .content{padding-top:88px}.scene-arrival .arrival-actions .action-link{font-size:11px}}
+
+/* SAI identity · quiet Korean wordmark, with a discreet international reading */
+.brand-header{gap:clamp(12px,2vw,28px);justify-content:space-between}
+.top-nav{margin:0 auto}
+.brand{flex:0 0 auto;display:inline-flex;align-items:center;gap:11px;border:0;padding:12px 0;background:none;color:#f4eee8;text-decoration:none;line-height:1;white-space:nowrap;cursor:pointer;transition:opacity .22s ease}
+.brand:hover{opacity:.78}
+.brand-ko{font-family:'Noto Serif KR',serif;font-size:25px;font-weight:400;line-height:1.2;letter-spacing:-.12em;padding-right:3px;text-shadow:0 2px 17px rgba(0,0,0,.3)}
+.brand-rule{width:1px;height:22px;background:linear-gradient(180deg,transparent,#e8d0b9cc,transparent)}
+.brand-en{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:.30em;color:#ddc5ac}
+@media (max-width:700px){.brand{gap:8px}.brand-ko{font-size:22px}.brand-rule{height:18px}.brand-en{font-size:9px;letter-spacing:.22em}}
+@media (max-width:370px){.brand-rule,.brand-en{display:none}.brand-ko{font-size:22px}}
+
+</style>
+</head>
+<body>
+<div id="app">
+<header class="brand-header">
+<button class="brand" type="button" data-go="0" aria-label="사이 SAI 첫 화면으로 이동"><span class="brand-ko">사이</span><span class="brand-rule" aria-hidden="true"></span><span class="brand-en" lang="en">SAI</span></button>
+<nav aria-label="장면 바로가기" class="top-nav"><button class="active" data-go="0">INTRO</button><button data-go="1">EXPERIENCE</button><button data-go="2">COMPANION</button><button data-go="4">BUSINESS</button></nav>
+<div class="top-actions"><button aria-label="움직임 줄이기" aria-pressed="false" class="icon-btn" id="motionToggle" title="움직임 줄이기">◐</button><button class="text-btn film-open" id="openFilmLibrary">◉ 영상 6편</button><button class="text-btn archive-open" id="openArchive" type="button">▤ 내 티켓 <span id="ticketCount">0</span></button><button class="text-btn" id="editBtn">✎ 문구 편집</button></div>
+</header>
+<main>
+<section aria-label="첫 장면, 출발" class="scene scene-hero active" data-name="출발" id="departure">
+<video autoplay="" class="background-video" data-film="hero" id="heroVideo" loop="" muted="" playsinline="" poster="assets/train-window-original.jpg" preload="none"></video>
+<div class="content hero-content">
+<span class="eyebrow">AN INTERACTIVE TRAVEL EXPERIENCE</span>
+<h1 class="serif" data-edit-key="hero-title">여행은 언제<br/>떠나고 싶은가요?</h1>
+<p class="lead" data-edit-key="hero-body">일상에서 잠깐 벗어나고 싶을 때.<br/>출발 시간과 목적지를 정하고, 다른 풍경을 만나보세요.</p>
+<div class="inline-actions" style="margin-top:24px"><button class="action-link" id="openTicket">여행 티켓 만들기</button><button class="action-link quiet-action" data-go="1">여행 둘러보기</button></div>
+</div>
+<div class="hero-stamp"><span>출발 <strong>04:32</strong></span><i></i><span>도착 <strong>04:47</strong></span></div>
+<span class="hero-film-label">DESTINATION 01<br/>DAWN COAST</span>
+</section>
+
+<section aria-label="세 번째 장면, 혼자 여행" class="scene scene-solo" data-name="혼자 여행" id="solo">
+<div aria-hidden="true" class="weather-stage"><video autoplay="" class="on" id="weatherA" loop="" muted="" playsinline="" poster="assets/weather-clear.jpg" preload="none"></video><video autoplay="" id="weatherB" loop="" muted="" playsinline="" preload="none"></video></div><div aria-hidden="true" class="particle-field" id="particles"></div>
+<div class="content"><span class="eyebrow">01 / YOUR OWN TIME</span><h2 class="serif" data-edit-key="solo-title">혼자가 좋은 시간</h2><p class="lead" data-edit-key="solo-body">창밖을 보거나 음악을 듣고, 오늘을 기록합니다.<br/>이야기 상대가 필요할 때는 AI를 초대할 수도 있습니다.</p>
+<div aria-label="여행 콘텐츠" class="inline-actions"><button class="action-link" data-tool="music">♫ 음악</button><button class="action-link" data-tool="photo">▣ 사진</button><button class="action-link" data-tool="journal">✎ 기록</button><button class="action-link" data-go="3">◷ 여정</button><button class="action-link ai-action" id="openAIFromSolo" type="button">✦ AI 탑승</button></div>
+<span class="kicker">CHANGE THE WEATHER</span>
+<p aria-live="polite" class="ai-inline-status" id="aiStatus"><span class="ai-dot"></span> AI 미탑승 · 원할 때 초대할 수 있습니다.</p><div class="weather-controls"><button aria-pressed="true" class="choice" data-weather="clear">☀ 맑음</button><button aria-pressed="false" class="choice" data-weather="rain">☂ 비</button><button aria-pressed="false" class="choice" data-weather="snow">❄ 눈</button></div>
+<p class="solo-info">AI는 직접 초대할 때만 탑승합니다. 오늘 남긴 이야기는 다음 여행에서 다시 확인할 수 있습니다.</p>
+</div>
+</section>
+<section aria-label="네 번째 장면, 동행" class="scene scene-companion" data-name="동행" id="companion">
+<div class="backdrop"></div><video autoplay="" class="background-video support-video" data-film="rain" id="companionVideo" loop="" muted="" playsinline="" poster="assets/rainy-cabin.jpg" preload="none"></video><div class="content"><span class="eyebrow">02 / AN OPTIONAL COMPANION</span><h2 class="serif" data-edit-key="companion-title">우연한 동행</h2><p class="lead" data-edit-key="companion-body">같은 열차를 선택한 사람이 탑승을 요청할 수 있습니다.<br/>동행과 대화는 서로 원할 때만 시작됩니다.</p>
+<div class="three-cards"><article class="story-card"><span>01 / SOLO</span><h3 data-edit-key="comp-solo">혼자 여행하기</h3><p>창밖을 보거나 좋아하는 것을 하며 시간을 보냅니다.</p></article><article class="story-card"><span>02 / REAL PEOPLE</span><h3 data-edit-key="comp-people">실제 사람과 동행</h3><p>정차역에서 합류 요청. 수락한 경우에만 앞좌석에 착석.</p></article><article class="story-card"><span>03 / AI COMPANION</span><h3 data-edit-key="comp-ai">AI를 초대하기</h3><p>오늘의 이야기를 남기고 다음 여행에서도 이어볼 수 있습니다.</p></article></div>
+<div class="companion-ai-row"><button class="chip" id="openAIFromCompanion" type="button">✦ AI 동행 시연 보기</button><span id="companionAIStatus">AI는 별도의 선택 옵션입니다.</span></div><p class="micro" style="margin-top:16px">마이크는 기본 꺼짐입니다. 동행은 상호 동의가 필요하며 음소거·차단·신고·혼자 계속 여행하기는 언제나 가능합니다. AI는 AI로 표시됩니다.</p>
+</div>
+</section>
+<section aria-label="다섯 번째 장면, 여행의 시간" class="scene scene-timeline" data-name="시간" id="journey">
+<div class="backdrop"></div><div class="content"><span class="eyebrow">03 / IN TRANSIT</span><h2 class="serif" data-edit-key="timeline-title">열차를 타고<br/>잠깐 다른 곳으로.</h2><p class="lead" data-edit-key="timeline-body">04:32 출발 · 04:39 이벤트 역 정차 · 04:47 바다 도착.<br/>원하는 정차역을 둘러보거나 객실에 머물 수 있습니다.</p>
+<div class="timeline"><div class="time-rail" id="timeRail"></div><div class="time-state"><div class="time-state-img" id="timeImage"><video id="timeVideo" loop="" muted="" playsinline="" poster="assets/passing-fields.jpg" preload="none"></video><span class="film-corner">FIELD NOTES</span></div><div class="time-state-copy"><span class="clock" id="timeClock">04:32 / DEPARTURE</span><h3 id="timeTitle">기차가 출발합니다.</h3><p id="timeDesc">도시의 마지막 불빛이 천천히 뒤로 흐릅니다.</p></div></div></div>
+</div>
+</section>
+<section aria-label="여섯 번째 장면, 비즈니스 모델" class="scene scene-business" data-name="비즈니스" id="business">
+<div class="backdrop"></div><video autoplay="" class="background-video support-video" data-film="udon" id="businessVideo" loop="" muted="" playsinline="" poster="assets/rainy-cabin.jpg" preload="none"></video><div class="content"><span class="eyebrow">04 / SERVICE MODEL</span><h2 class="serif" data-edit-key="biz-title">여행 안에서<br/>만나는 새로운 경험</h2><p class="lead" data-edit-key="biz-body">브랜드는 정차역이나 객실 콘텐츠에 참여하고, 사용자는 자신의 여행 방식을 선택합니다.</p>
+<div aria-label="비즈니스 모델 선택" class="tabs" role="tablist"><button aria-selected="true" class="tab" data-biz="b2b" id="b2bTab" role="tab">B2B · 브랜드 경험</button><button aria-selected="false" class="tab" data-biz="b2c" id="b2cTab" role="tab">B2C · 객실과 노출</button></div>
+<div aria-labelledby="b2bTab" class="business-grid" id="bizGrid" role="tabpanel"></div><p class="micro" style="margin-top:16px">무료 열차는 이벤트 역에 정차합니다. 하차와 브랜드 체험은 선택이며, 유료 노출은 실제 만남을 보장하지 않습니다.</p>
+</div>
+</section>
+<section aria-label="일곱 번째 장면, 바다 도착" class="scene scene-arrival" data-name="도착" id="arrival">
+<div class="backdrop"></div><video autoplay="" class="background-video support-video" data-film="arrival" id="arrivalVideo" loop="" muted="" playsinline="" poster="assets/arrival-clean.jpg" preload="none"></video><div class="content arrival-copy"><span class="eyebrow">05 / ARRIVAL · 04:47</span><h2 class="serif" data-edit-key="arrival-title">여행이 끝나면<br/>티켓이 한 장 남습니다.</h2><p data-edit-key="arrival-body">완료한 여행의 티켓을 모아두고,<br/>언제 어디로 다녀왔는지 다시 확인할 수 있습니다.</p><div class="arrival-actions"><button class="action-link ticket-primary" id="collectTicket" type="button">▤ 이번 여행 티켓 보관하기</button><button class="action-link quiet-action" id="viewArchiveFromArrival" type="button">모아둔 티켓 보기</button></div><button class="action-link arrive-again" data-go="0">다른 여행 선택</button></div>
+</section>
+</main>
+<div aria-hidden="true" aria-labelledby="toolTitle" aria-modal="true" class="experience-dialog" id="toolDialog" role="dialog">
+<div class="dialog-box"><button aria-label="닫기" class="dialog-dismiss" data-close-dialog="">×</button><span class="eyebrow" id="toolEyebrow">SOLO TRAVEL / PREVIEW</span>
+<h2 class="serif" id="toolTitle">혼자가 좋은 시간</h2><div id="toolContent"></div></div>
+</div>
+<div aria-hidden="true" aria-labelledby="ticketModalTitle" aria-modal="true" class="experience-dialog" id="ticketDialog" role="dialog">
+<div class="dialog-box">
+<button aria-label="닫기" class="dialog-dismiss" data-close-dialog="">×</button><span class="eyebrow">YOUR TICKET / EXPERIENCE PREVIEW</span>
+<h2 class="serif" id="ticketModalTitle">나만의 기차를<br/>만들어봅니다.</h2>
+<p>티켓은 여행 시간 동안만 열리는 작은 공간입니다. 다른 승객이 없어도 기차는 정해진 목적지까지 이동합니다.</p>
+<div class="ticket-field"><label>목적지<select id="ticketDest"><option value="새벽바다">새벽바다</option><option value="비 오는 해안">비 오는 해안</option><option value="겨울 바다">겨울 바다</option></select></label>
+<label>좌석<select id="ticketSeat"><option value="창가 · 01">창가 · 01</option><option value="창가 · 02">창가 · 02</option><option value="통로 · 03">통로 · 03</option></select></label>
+<label>출발<select id="ticketStart"><option value="04:32">04:32</option><option value="05:10">05:10</option><option value="05:45">05:45</option><option value="18:30">18:30</option><option value="21:00">21:00</option><option value="23:30">23:30</option></select></label></div>
+<div class="ticket-detail"><span>여행 시간<b>15분</b></span><span>탑승<b>자유</b></span><span>공간<b>임시 객실</b></span></div>
+<label class="ticket-opt"><input checked="" id="ticketOpen" type="checkbox"/> 낯선 사람의 동행 요청을 받을 수 있습니다 (수락 전 입장 불가)</label>
+<button class="dialog-confirm" id="createTicket">티켓 만들기 →</button><div class="ticket-output" hidden="" id="ticketOutput"></div><button class="dialog-confirm" hidden="" id="startTicketJourney" type="button">이 티켓으로 여행 시작하기 →</button>
+<p style="margin-top:15px;font-size:10px">기획 시연입니다. 실제 XR 객실·채팅방·예약을 생성하지 않습니다.</p>
+</div>
+</div>
+<div aria-hidden="true" aria-labelledby="aiModalTitle" aria-modal="true" class="experience-dialog ai-dialog" id="aiDialog" role="dialog">
+<div class="dialog-box">
+<button aria-label="닫기" class="dialog-dismiss" data-close-dialog="">×</button>
+<span class="eyebrow">OPTIONAL AI COMPANION / PREVIEW</span>
+<h2 class="serif" id="aiModalTitle">오늘 어떤 일이 있었나요?</h2>
+<p>혼자 여행하다가 원할 때 AI를 초대할 수 있습니다. 오늘 남긴 이야기는 다음 여행에서도 이어서 확인하는 콘셉트입니다.</p>
+<div class="ai-board-line"><div><span class="small-label">ONBOARD STATUS</span><strong id="aiBoardState">AI 미탑승</strong></div><button class="dialog-confirm" id="aiBoardToggle" type="button">AI 탑승하기</button></div>
+<label class="ai-memory-label" for="aiMemoryInput">오늘 남기고 싶은 이야기</label>
+<textarea class="journal-area ai-memory-input" id="aiMemoryInput" maxlength="1200" placeholder="오늘 어떤 일이 있었나요? 짧게 남겨도 좋아요."></textarea>
+<div class="ai-memory-actions"><button class="dialog-confirm" id="saveAIMemory" type="button">오늘 이야기 기억하기</button><span class="micro" id="aiMemoryFeedback">기억은 이 브라우저에 저장됩니다.</span></div>
+<div class="ai-history-head"><strong>이전에 남긴 이야기</strong><button class="archive-text-action" id="clearAIMemory" type="button">기억 모두 삭제</button></div>
+<div class="ai-memory-history" id="aiMemoryHistory"></div>
+<p class="privacy-note">기획 시연: 실제 AI 채팅이나 계정 동기화는 연결되어 있지 않습니다. 저장한 내용은 현재 브라우저에만 남습니다.</p>
+</div>
+</div><div aria-hidden="true" aria-labelledby="archiveTitle" aria-modal="true" class="experience-dialog archive-dialog" id="archiveDialog" role="dialog">
+<div class="dialog-box">
+<button aria-label="닫기" class="dialog-dismiss" data-close-dialog="">×</button>
+<div class="archive-header"><div><span class="eyebrow">TICKET ARCHIVE</span><h2 class="serif" id="archiveTitle">내 여행 티켓</h2><p>여행이 끝날 때마다 티켓을 한 장씩 모아둘 수 있습니다.</p></div><div class="archive-total"><strong id="archiveTotal">00</strong><span>TICKETS COLLECTED</span></div></div>
+<div class="ticket-collection" id="ticketCollection"></div>
+<div class="archive-bottom"><span>기획 시연 · 티켓은 현재 브라우저에만 저장됩니다.</span><div><button class="archive-text-action" id="exportTickets" type="button">내 티켓 내보내기</button><button class="archive-text-action" id="clearTickets" type="button">모두 비우기</button></div></div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="filmModalTitle" aria-modal="true" class="experience-dialog film-dialog" id="filmDialog" role="dialog">
+<div class="dialog-box"><button aria-label="닫기" class="dialog-dismiss" data-close-dialog="" style="z-index:8">×</button>
+<div class="film-box"><div class="film-display"><video autoplay="" controls="" id="libraryPlayer" loop="" muted="" playsinline="" preload="none"></video><span class="film-status" id="filmStatus">SEEDANCE / ORIGINAL VIDEO</span>
+<div class="film-caption"><span class="kicker" id="filmEyebrow">01 / DEPARTURE</span><h3 id="filmModalTitle">창밖으로 지나가는 시간</h3><p id="filmDescription">기차 창문의 시점을 유지한 채 바깥 풍경이 움직입니다.</p></div></div>
+<div class="film-selector"><span class="eyebrow">FILM LIBRARY / 6 VIDEOS</span>
+<button class="active" data-film-select="hero"><span>01</span><strong>새벽 열차 · 출발</strong></button>
+<button data-film-select="clear"><span>02</span><strong>맑은 해안</strong></button>
+<button data-film-select="rain"><span>03</span><strong>비 내리는 창밖</strong></button>
+<button data-film-select="snow"><span>04</span><strong>눈 내리는 풍경</strong></button>
+<button data-film-select="udon"><span>05</span><strong>우동 이벤트 역</strong></button>
+<button data-film-select="arrival"><span>06</span><strong>새벽바다 · 도착</strong></button>
+<p class="film-note">기존 Seedance 제작 영상 6편을 연결했습니다. 네트워크 연결이 안 되면 패키지의 간단한 모션 루프 또는 정지 이미지로 전환됩니다.</p>
+</div></div>
+</div>
+</div>
+<button aria-label="이전 장면" class="change-scene prev" id="prevScene">‹</button><button aria-label="다음 장면" class="change-scene next" id="nextScene">›</button>
+<nav aria-label="장면 탐색" class="scene-dots" id="sceneDots"></nav>
+<div aria-live="polite" class="scene-count"><strong id="sceneNow">01</strong> / 06</div>
+<div class="hint">SCROLL · SWIPE · ARROW KEYS</div>
+<div class="progress-track"><div id="progressFill"></div></div>
+<div class="edit-export"><button id="saveCopy">저장</button><button id="exportCopy">JSON 내보내기</button><button id="resetCopy">초기화</button></div><div aria-live="polite" class="edit-toast" id="editToast" role="status"></div>
+</div>
+<script>
+(() => {
+'use strict';
+const assetUrl=(name)=>window.__JOURNEY_ASSET_URLS?.[name]||'assets/'+name;
+const $=(s,root=document)=>root.querySelector(s), $$=(s,root=document)=>Array.from(root.querySelectorAll(s));
+const CLOUD='https://d8j0ntlcm91z4.cloudfront.net/user_2yezoKDuhC6jK2L1CpfP9hvfrRm/';
+const films={
+ hero:{url:CLOUD+'hf_20261114_060037_d9b3bc57-c891-4a0b-9d05-081e66fc2995.mp4',local:'assets/video/hero-window.mp4',poster:'assets/train-window-original.jpg',name:'새벽 열차 · 출발',caption:'차창 밖으로 지나가는 첫 풍경'},
+ clear:{url:CLOUD+'hf_20261114_142100_589ae963-c794-40cb-a17c-3497491a0a21.mp4',local:'assets/video/weather-clear.mp4',poster:'assets/weather-clear.jpg',name:'맑은 해안',caption:'햇살이 번지는 해안선'},
+ rain:{url:CLOUD+'hf_20261114_142100_ddcab6ab-6a23-4eae-86b7-7416fe056f7e.mp4',local:'assets/video/weather-rain.mp4',poster:'assets/weather-rain.jpg',name:'비 내리는 창밖',caption:'창문에 남는 빗방울과 흐린 바다'},
+ snow:{url:CLOUD+'hf_20261114_142100_2ff09ece-37f1-4572-84df-13379482edae.mp4',local:'assets/video/weather-snow.mp4',poster:'assets/weather-snow.jpg',name:'눈 내리는 풍경',caption:'고요한 겨울의 해안'},
+ udon:{url:CLOUD+'hf_20261114_142100_a6b7ba48-5cf9-4179-a325-a72cac9805b1.mp4',local:null,poster:'assets/rainy-cabin.jpg',name:'우동 이벤트 역',caption:'브랜드 경험을 만나볼 수 있는 짧은 정차'},
+ arrival:{url:CLOUD+'hf_20261114_142100_1dcf7ddf-54ff-4520-82da-d0abfd6b3011.mp4',local:'assets/video/arrival-clean.mp4',poster:'assets/arrival-clean.jpg',name:'새벽바다 · 도착',caption:'마지막으로 바다가 펼쳐집니다'},
+ mist:{url:null,local:'assets/video/mist-landscape.mp4',poster:'assets/mist-landscape.jpg',name:'교외 풍경',caption:'모션 시안'}
+};
+const scenes=$$('.scene');let current=0,isChanging=false,wheelUnlock=0,touchStart=null;
+const reducedSystem=matchMedia('(prefers-reduced-motion:reduce)').matches;let motionOff=reducedSystem;
+const nav=$('#sceneDots');
+scenes.forEach((scene,i)=>{const b=document.createElement('button');b.type='button';b.dataset.go=i;b.dataset.name=scene.dataset.name;b.setAttribute('aria-label',`${i+1}번째 장면: ${scene.dataset.name}`);b.setAttribute('aria-current',i===0?'step':'false');nav.appendChild(b)});
+function ensureMedia(el,key,{forceLocal=false}={}){
+ if(!el||!films[key])return;
+ const f=films[key];el.dataset.filmKey=key;el.poster=f.poster;el.muted=true;el.loop=true;el.playsInline=true;
+ // An error on the original video explicitly selects the locally bundled preview.
+ if(el._journeyError)el.removeEventListener('error',el._journeyError);
+ el._journeyError=()=>{
+   if(el.dataset.fallback==='yes')return;
+   el.dataset.fallback='yes';
+   if(f.local){el.src=f.local;el.load();if(!motionOff&&(el.closest('.scene')?.classList.contains('active')||el===window._galleryPlayer))el.play().catch(()=>{});}
+   else {el.removeAttribute('src');el.load();}
+   if(el===$('#libraryPlayer'))$('#filmStatus').textContent=f.local?'LOCAL MOTION PREVIEW':'STILL / ORIGINAL VIDEO UNAVAILABLE';
+ };
+ el.addEventListener('error',el._journeyError);
+ // Some restricted browsers never dispatch an error for an unreachable media URL.
+ // Fall back to the bundled preview if no frame arrives within a few seconds.
+ if(el._journeyTimeout)clearTimeout(el._journeyTimeout);
+ el.dataset.fallback='no';el.src=forceLocal||!f.url?f.local||'':f.url;
+ if(el.getAttribute('src'))el.load();
+ if(f.url&&!forceLocal){
+   el._journeyTimeout=setTimeout(()=>{if(el.dataset.filmKey===key&&el.readyState<2&&el.dataset.fallback!=='yes')el._journeyError()},3800);
+   el.addEventListener('loadeddata',()=>clearTimeout(el._journeyTimeout),{once:true});
+ }
+}
+function playIfReady(v){if(!v||motionOff)return;const p=v.play();if(p&&p.catch)p.catch(()=>{});}
+const ambient=$$('video').filter(v=>v.id!=='libraryPlayer');
+function syncVideos(){ambient.forEach(v=>{
+ const parent=v.closest('.scene');const active=parent&&parent.classList.contains('active');
+ if(motionOff||!active){v.pause();return;}
+ if(v.id==='timeVideo'&&v.dataset.filmKey==null)return;
+ if(v.dataset.lazyFilm&&!v.dataset.filmKey)ensureMedia(v,v.dataset.lazyFilm);
+ if(v.getAttribute('src'))playIfReady(v);
+ });}
+function goto(index,updateHash=true){
+ if(document.body.classList.contains('edit-mode'))return;
+ const next=Math.max(0,Math.min(scenes.length-1,index));if(next===current||isChanging)return;
+ isChanging=true;scenes[current].classList.remove('active');scenes[current].setAttribute('aria-hidden','true');
+ scenes[next].classList.add('active');scenes[next].removeAttribute('aria-hidden');current=next;
+ $$('[data-go]').forEach(b=>b.classList.toggle('active',Number(b.dataset.go)===next));
+ $$('#sceneDots button').forEach((b,i)=>b.setAttribute('aria-current',i===current?'step':'false'));
+ $('#sceneNow').textContent=String(next+1).padStart(2,'0');$('#progressFill').style.width=((next+1)/scenes.length*100)+'%';
+ $('#prevScene').disabled=next===0;$('#nextScene').disabled=next===scenes.length-1;
+ if(next===1&&!weatherHasStarted)setWeather('clear');
+ if(next===3) setStop(selectedStop);
+ syncVideos();if(updateHash)history.replaceState(null,'','#'+scenes[next].id);
+ setTimeout(()=>isChanging=false,motionOff?40:1080);
+}
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>goto(Number(b.dataset.go))));
+$('#prevScene').onclick=()=>goto(current-1);$('#nextScene').onclick=()=>goto(current+1);$('#prevScene').disabled=true;
+window.addEventListener('wheel',e=>{if(document.querySelector('.experience-dialog.open')||document.body.classList.contains('edit-mode'))return;
+ const content=e.target.closest('.content');if(content&&content.scrollHeight>content.clientHeight+6){const top=content.scrollTop<=1,bottom=content.scrollTop+content.clientHeight>=content.scrollHeight-1;if(e.deltaY>0&&!bottom||e.deltaY<0&&!top)return;}
+ e.preventDefault();if(Math.abs(e.deltaY)<7||Date.now()<wheelUnlock)return;wheelUnlock=Date.now()+1150;goto(current+(e.deltaY>0?1:-1));},{passive:false});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){$$('.experience-dialog.open').forEach(closeDialog);return}
+ if(document.body.classList.contains('edit-mode')||document.querySelector('.experience-dialog.open')||e.target.matches('input,textarea,select,[contenteditable]'))return;
+ if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();goto(current+1)}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();goto(current-1)}
+});
+window.addEventListener('touchstart',e=>{const t=e.changedTouches[0];touchStart={x:t.clientX,y:t.clientY}}, {passive:true});
+window.addEventListener('touchend',e=>{if(!touchStart||document.querySelector('.experience-dialog.open')||document.body.classList.contains('edit-mode'))return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;if(Math.abs(dx)>75&&Math.abs(dx)>Math.abs(dy)*1.15)goto(current+(dx<0?1:-1));touchStart=null},{passive:true});
+// Start only visible film sources; each scene's film is tagged and lazy-loaded.
+for(const v of $$('video[data-film]')) v.dataset.lazyFilm=v.dataset.film;
+ensureMedia($('#heroVideo'),'hero');
+let weatherHasStarted=false,layer=0,weather='clear';const weatherVideos=[$('#weatherA'),$('#weatherB')],particles=$('#particles');
+function particleWeather(type){particles.replaceChildren();if(type==='clear'||motionOff)return;const number=type==='rain'?18:15;const frag=document.createDocumentFragment();for(let i=0;i<number;i++){const p=document.createElement('i');p.className='particle '+type;if(type==='snow')p.textContent='❄';p.style.left=(Math.random()*100)+'%';p.style.animationDelay=(-Math.random()*7)+'s';p.style.animationDuration=(type==='rain'?2+Math.random()*1.5:7+Math.random()*5)+'s';p.style.opacity=(.14+Math.random()*.28).toString();frag.appendChild(p)}particles.appendChild(frag)}
+function setWeather(type){weather=type;weatherHasStarted=true;$$('[data-weather]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.weather===type)));const next=1-layer,v=weatherVideos[next];v.classList.remove('on');ensureMedia(v,type);
+ // Avoid fading in a blank frame: poster is visible during loading; crossfade when a frame arrives.
+ const swap=()=>{v.classList.add('on');weatherVideos[layer].classList.remove('on');weatherVideos[layer].pause();layer=next};
+ v.addEventListener('loadeddata',swap,{once:true});if(v.readyState>=2)swap();else setTimeout(()=>{if(v.dataset.filmKey===type&&layer!==next)swap()},1700);
+ if(!motionOff&&current===1)playIfReady(v);particleWeather(type);
+}
+$$('[data-weather]').forEach(b=>b.onclick=()=>setWeather(b.dataset.weather));
+$('#motionToggle').onclick=()=>{motionOff=!motionOff;$('#motionToggle').setAttribute('aria-pressed',String(motionOff));$('#motionToggle').title=motionOff?'움직임 켜기':'움직임 줄이기';$('#motionToggle').setAttribute('aria-label',motionOff?'움직임 켜기':'움직임 줄이기');document.body.classList.toggle('motion-off',motionOff);particleWeather(weather);syncVideos();if(motionOff)$('#libraryPlayer').pause();else if($('#filmDialog').classList.contains('open'))playIfReady($('#libraryPlayer'))};
+if(motionOff)document.body.classList.add('motion-off');
+// Illustrative in-journey timeline (not an operating train timetable).
+const stops=[
+ ['04:32','출발','기차가 출발합니다.','창밖의 불빛이 멀어집니다.','passing-fields.jpg','hero'],
+ ['04:35','교외','도시를 벗어나.','낮은 언덕과 들판을 지나갑니다.','mist-landscape.jpg','mist'],
+ ['04:39','이벤트 역','우동역에 잠시 정차.','무료 열차가 정차하는 브랜드 경험 역. 둘러보거나 객실에 머물 수 있습니다.','rainy-cabin.jpg','udon'],
+ ['04:43','해안선','바다가 보입니다.','창문 너머 수평선이 열립니다.','weather-clear.jpg','clear'],
+ ['04:47','도착','새벽바다에 도착.','여행은 끝나고, 각자의 하루가 시작됩니다.','arrival-clean.jpg','arrival']
+];let selectedStop=0;
+$('#timeRail').innerHTML=stops.map((s,i)=>`<button type="button" class="time-stop ${i===0?'active':''}" data-stop="${i}" aria-label="${s[0]} ${s[1]}"><span class="dot"></span><time>${s[0]}</time><span>${s[1]}</span></button>`).join('');
+function setStop(i){selectedStop=i;const s=stops[i];$('#timeClock').textContent=s[0]+' / '+s[1].toUpperCase();$('#timeTitle').textContent=s[2];$('#timeDesc').textContent=s[3];
+ $('#timeImage').style.backgroundImage=`linear-gradient(0deg,#06141b22,#06141b22),url('${assetUrl(s[4])}')`;
+ $$('.time-stop').forEach((b,j)=>b.classList.toggle('active',j===i));
+ const v=$('#timeVideo');v.classList.remove('has-video');ensureMedia(v,s[5]);
+ v.addEventListener('loadeddata',()=>{if(selectedStop===i)v.classList.add('has-video')},{once:true});
+ if(!motionOff&&current===3)playIfReady(v);
+}
+$$('.time-stop').forEach(b=>b.onclick=()=>setStop(Number(b.dataset.stop)));setStop(0);
+const biz={
+ b2b:[['여행 패키지','관광·숙박·지역 경험을 목적지와 연결합니다.','weather-clear.jpg'],['이벤트 역','무료 열차가 정차하는 우동역·공연역·브랜드 팝업.','rainy-cabin.jpg'],['기내 매점','과자·음료를 가상으로 경험하고 실제 상품과 연결합니다.','passing-fields.jpg']],
+ b2c:[['여행 노출','내 티켓이 더 많은 여행자에게 발견되도록 합니다.','mist-landscape.jpg'],['특별 객실','친구와 함께하는 소규모 객실을 선택합니다.','weather-rain.jpg'],['직행 노선','이벤트 역에 정차하지 않고 목적지로 갑니다.','arrival-clean.jpg']]
+};
+function setBusiness(type){$$('[data-biz]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.biz===type)));$('#bizGrid').innerHTML=biz[type].map((x,i)=>`<article class="biz-card"><img src="${assetUrl(x[2])}" alt="" loading="lazy"><span class="kicker">0${i+1} / ${type.toUpperCase()}</span><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join('');$('#bizGrid').setAttribute('aria-labelledby',type+'Tab')}
+$$('[data-biz]').forEach(b=>b.onclick=()=>setBusiness(b.dataset.biz));setBusiness('b2b');
+// Lightweight ticket example: no matchmaking, real-time network, or generated reservation.
+function openDialog(el){el.classList.add('open');el.setAttribute('aria-hidden','false');el.querySelector('.dialog-dismiss')?.focus();if(el.id==='filmDialog'){ambient.forEach(v=>v.pause());openFilm('hero')}}
+function closeDialog(el){el.classList.remove('open');el.setAttribute('aria-hidden','true');if(el.id==='filmDialog')$('#libraryPlayer').pause();syncVideos()}
+$('#openTicket').onclick=()=>openDialog($('#ticketDialog'));$('#openFilmLibrary').onclick=()=>openDialog($('#filmDialog'));
+function openTool(type){
+ const title={music:'객실 안에서 듣는 음악',photo:'오늘의 풍경',journal:'여행의 기록'}[type];
+ $('#toolTitle').textContent=title;$('#toolEyebrow').textContent=type.toUpperCase()+' / EXPERIENCE PREVIEW';
+ const area=$('#toolContent');
+ if(type==='music'){
+  area.innerHTML='<p>조용히 음악을 골라보세요. 기획용 선택 시연이며 실제 음원은 재생하지 않습니다.</p><div class="tool-options"><button aria-pressed="true" data-track="바다의 새벽">바다의 새벽</button><button aria-pressed="false" data-track="비 오는 창밖">비 오는 창밖</button><button aria-pressed="false" data-track="고요한 객실">고요한 객실</button></div><p id="musicSelected">선택한 분위기 · 바다의 새벽</p>';
+  $$('[data-track]',area).forEach(b=>b.onclick=()=>{$$('[data-track]',area).forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('#musicSelected').textContent='선택한 분위기 · '+b.dataset.track});
+ }else if(type==='photo'){
+  const p=films[weather]||films.clear;
+  area.innerHTML='<p>창밖의 풍경을 사진으로 남기는 경험을 가정한 시연입니다.</p><img class="tool-image" alt="기차 창밖 바다 풍경" src="'+p.poster+'"><button class="dialog-confirm" id="savePhoto">사진 파일 열기 ↗</button><p style="font-size:10px">현재 화면을 캡처하지 않고, 날씨별 콘셉트 이미지를 보여줍니다.</p>';
+  $('#savePhoto').onclick=()=>{const a=document.createElement('a');a.href=p.poster;a.download='train-window-'+weather+'.jpg';a.click()};
+ }else if(type==='journal'){
+  let prior='';try{prior=localStorage.getItem('journey-journal-note')||''}catch(e){}
+  area.innerHTML='<p>혼자 여행하면서 떠오른 내용을 자유롭게 기록해 보세요.</p><textarea class="journal-area" id="journalArea" maxlength="2000" placeholder="오늘 있었던 일이나 남기고 싶은 한 줄..."></textarea><button class="dialog-confirm" id="journalSave">기록 저장하기 ↗</button><p id="journalMessage" style="font-size:11px">이 브라우저 안에서만 보관하는 기획 시연입니다.</p>';
+  $('#journalArea').value=prior;
+  $('#journalSave').onclick=()=>{const value=$('#journalArea').value;try{localStorage.setItem('journey-journal-note',value);$('#journalMessage').textContent='기록을 브라우저에 저장했습니다.'}catch(e){$('#journalMessage').textContent='저장 공간을 사용할 수 없습니다. 아래 내용은 이 화면에서 유지됩니다.'}};
+ }
+ openDialog($('#toolDialog'));
+}
+$$('[data-tool]').forEach(b=>b.onclick=()=>openTool(b.dataset.tool));
+$$('[data-close-dialog]').forEach(b=>b.onclick=()=>closeDialog(b.closest('.experience-dialog')));
+$$('.experience-dialog').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeDialog(m)}));
+
+// A completed journey becomes a collectible boarding ticket.
+// All persistence in this prototype is local-only, never account-synced.
+const ticketStorage='journey-ticket-collection-v1',pendingStorage='journey-pending-ticket-v1',memoryStorage='journey-ai-daily-memories-v1';
+function readStored(key,fallback){try{const v=JSON.parse(localStorage.getItem(key)||'null');return v===null?fallback:v}catch(e){return fallback}}
+function writeStored(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+function escapeHTML(str){return String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+let ticketCollection=readStored(ticketStorage,[]);if(!Array.isArray(ticketCollection))ticketCollection=[];
+let pendingTicket=readStored(pendingStorage,null);
+function formatTravelDate(value){let date=new Date(value);return Number.isNaN(date.getTime())?'-':new Intl.DateTimeFormat('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).format(date)}
+function updateTicketCount(){const c=ticketCollection.length;$('#ticketCount').textContent=String(c);$('#archiveTotal').textContent=String(c).padStart(2,'0')}
+function renderTicketArchive(){updateTicketCount();const area=$('#ticketCollection');area.replaceChildren();
+ if(!ticketCollection.length){area.innerHTML='<div class="ticket-empty"><span class="empty-ticket-symbol">▤</span><strong>아직 모아둔 티켓이 없습니다.</strong><p>티켓을 만들고 여행을 마친 뒤 보관해 보세요.</p><button class="dialog-confirm" id="makeFirstTicket">첫 티켓 만들기 →</button></div>';$('#makeFirstTicket').onclick=()=>{closeDialog($('#archiveDialog'));openDialog($('#ticketDialog'))};return}
+ ticketCollection.forEach(t=>{const node=document.createElement('article');node.className='ticket-entry';node.innerHTML=`<div class="ticket-main"><div class="ticket-topline"><b>BOARDING TICKET</b><span>YOUR TRAVEL RECORD</span></div><div class="ticket-route"><span>DESTINATION / ${escapeHTML(t.id||'')}</span><strong>${escapeHTML(t.dest||'여행')}</strong><p>${escapeHTML(t.start||'')} — ${escapeHTML(t.end||'')} · ${escapeHTML(t.seat||'')}</p></div><div class="ticket-meta"><div><small>DATE</small><b>${escapeHTML(formatTravelDate(t.completedAt||t.createdAt))}</b></div><div><small>TRAVEL MODE</small><b>${t.open?'동행 요청 가능':'혼자 여행'}</b></div></div></div><div class="ticket-stub">SAI · COMPLETE</div><button type="button" class="ticket-remove" aria-label="티켓 삭제">삭제</button>`;node.querySelector('button.ticket-remove').onclick=()=>{if(!confirm('이 티켓을 보관함에서 삭제할까요?'))return;ticketCollection=ticketCollection.filter(x=>x.id!==t.id);writeStored(ticketStorage,ticketCollection);renderTicketArchive()};area.appendChild(node)});
+}
+function openTicketArchive(){renderTicketArchive();openDialog($('#archiveDialog'))}
+$('#openArchive').onclick=openTicketArchive;
+$('#viewArchiveFromArrival').onclick=openTicketArchive;
+$('#collectTicket').onclick=()=>{
+ if(!pendingTicket){message('티켓을 먼저 만들어 주세요.');openDialog($('#ticketDialog'));return}
+ const collected={...pendingTicket,completedAt:new Date().toISOString()};ticketCollection.unshift(collected);ticketCollection=ticketCollection.slice(0,80);
+ if(writeStored(ticketStorage,ticketCollection)){pendingTicket=null;try{localStorage.removeItem(pendingStorage)}catch(e){};updateTicketCount();$('#collectTicket').textContent='✓ 이번 여행 티켓 보관 완료';openTicketArchive()}
+ else{message('브라우저에 보관하지 못했습니다. 저장 공간을 확인해 주세요.')}
+};
+$('#createTicket').onclick=()=>{const dest=$('#ticketDest').value,seat=$('#ticketSeat').value,start=$('#ticketStart').value,open=$('#ticketOpen').checked;
+ const [hour,min]=start.split(':').map(Number),arr=new Date(2000,0,1,hour,min+15),end=[arr.getHours(),arr.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':');
+ pendingTicket={id:'JT-'+Date.now().toString(36).toUpperCase(),dest,seat,start,end,open,createdAt:new Date().toISOString()};writeStored(pendingStorage,pendingTicket);
+ const output=$('#ticketOutput');output.hidden=false;output.innerHTML=`<strong>${escapeHTML(dest)}행 · 여행 티켓</strong><span style="font-size:12px;line-height:1.9">${start} → ${end} &nbsp;·&nbsp; ${escapeHTML(seat)}<br>${open?'동행 요청을 받을 수 있습니다.':'혼자 여행하기로 설정했습니다.'}</span><br><small>도착 화면에서 티켓을 보관할 수 있는 시연입니다.</small>`;
+ $('#startTicketJourney').hidden=false;$('#collectTicket').textContent='▤ 이번 여행 티켓 보관하기';
+};
+$('#startTicketJourney').onclick=()=>{if(!pendingTicket)return;closeDialog($('#ticketDialog'));goto(1);message('여행 시연을 시작합니다. 도착 후 티켓을 보관해 보세요.')};
+$('#exportTickets').onclick=()=>{const data=new Blob([JSON.stringify({product:'사이 SAI',type:'tickets',version:1,tickets:ticketCollection},null,2)],{type:'application/json'});const a=document.createElement('a'),u=URL.createObjectURL(data);a.href=u;a.download='train-collected-tickets.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)};
+$('#clearTickets').onclick=()=>{if(!ticketCollection.length)return;if(!confirm('보관된 모든 티켓을 삭제할까요?'))return;ticketCollection=[];writeStored(ticketStorage,ticketCollection);renderTicketArchive()};
+updateTicketCount();
+// Optional AI with a deliberately transparent local memory demonstration.
+let aiOnboard=false,aiMemory=readStored(memoryStorage,[]);if(!Array.isArray(aiMemory))aiMemory=[];
+function updateAIState(){$('#aiBoardState').textContent=aiOnboard?'AI 탑승 중':'AI 미탑승';$('#aiBoardToggle').textContent=aiOnboard?'AI 내리기':'AI 탑승하기';$('#aiBoardToggle').classList.toggle('is-active',aiOnboard);$('#aiStatus').classList.toggle('is-on',aiOnboard);$('#aiStatus').innerHTML='<span class="ai-dot"></span> '+(aiOnboard?'AI 탑승 중 · 오늘의 이야기를 남길 수 있습니다.':'AI 미탑승 · 원할 때 초대할 수 있습니다.');$('#companionAIStatus').textContent=aiOnboard?'AI가 함께 탑승 중입니다.':'AI는 별도의 선택 옵션입니다.'}
+function renderAIMemory(){const area=$('#aiMemoryHistory');area.replaceChildren();if(!aiMemory.length){const p=document.createElement('div');p.className='ai-empty';p.textContent='아직 남긴 이야기가 없습니다. 오늘의 이야기를 기록하면 이곳에 표시됩니다.';area.appendChild(p);return}
+ aiMemory.slice(0,10).forEach(m=>{const card=document.createElement('div');card.className='ai-note';const t=document.createElement('time');t.textContent=formatTravelDate(m.at);const p=document.createElement('p');p.textContent=m.text;card.append(t,p);area.appendChild(card)})}
+function openAI(){updateAIState();renderAIMemory();openDialog($('#aiDialog'))}
+$('#openAIFromSolo').onclick=openAI;$('#openAIFromCompanion').onclick=openAI;
+$('#aiBoardToggle').onclick=()=>{aiOnboard=!aiOnboard;updateAIState();$('#aiMemoryFeedback').textContent=aiOnboard?'AI가 탑승했습니다. 대화는 콘셉트 시연입니다.':'AI가 내렸습니다. 저장된 기억은 남아 있습니다.'};
+$('#saveAIMemory').onclick=()=>{const value=$('#aiMemoryInput').value.trim();if(!value){$('#aiMemoryFeedback').textContent='오늘의 이야기를 입력해 주세요.';return}aiMemory.unshift({id:'M-'+Date.now(),at:new Date().toISOString(),text:value});aiMemory=aiMemory.slice(0,60);if(writeStored(memoryStorage,aiMemory)){$('#aiMemoryInput').value='';$('#aiMemoryFeedback').textContent='저장했습니다. 다음 여행에서도 이 브라우저에서 확인할 수 있습니다.';renderAIMemory()}else{$('#aiMemoryFeedback').textContent='브라우저 저장 공간을 사용할 수 없습니다.'}};
+$('#clearAIMemory').onclick=()=>{if(!aiMemory.length)return;if(!confirm('AI에 남긴 모든 이야기를 삭제할까요?'))return;aiMemory=[];writeStored(memoryStorage,aiMemory);renderAIMemory();$('#aiMemoryFeedback').textContent='기억을 삭제했습니다.'};
+updateAIState();
+const library=$('#libraryPlayer');window._galleryPlayer=library;
+const filmOrder=['hero','clear','rain','snow','udon','arrival'];
+function openFilm(key){const f=films[key];if(!f)return;$$('[data-film-select]').forEach(b=>b.classList.toggle('active',b.dataset.filmSelect===key));
+ $('#filmEyebrow').textContent=String(filmOrder.indexOf(key)+1).padStart(2,'0')+' / TRAVEL FILM';
+ $('#filmModalTitle').textContent=f.name;$('#filmDescription').textContent=f.caption;$('#filmStatus').textContent='SEEDANCE / ORIGINAL VIDEO';
+ ensureMedia(library,key);if(!motionOff)playIfReady(library);
+}
+$$('[data-film-select]').forEach(b=>b.onclick=()=>openFilm(b.dataset.filmSelect));
+// Original page's text editing is preserved for presentation copy.
+const copyKey='journey-cinematic-v6-copy',editable=$$('[data-edit-key]'),originals=Object.fromEntries(editable.map(e=>[e.dataset.editKey,e.innerHTML]));let editing=false,toastTimeout;
+function message(s){const e=$('#editToast');e.textContent=s;e.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>e.classList.remove('show'),2600)}
+function applyCopy(obj){editable.forEach(e=>{if(typeof obj[e.dataset.editKey]==='string')e.innerHTML=obj[e.dataset.editKey]})}
+try{const stored=JSON.parse(localStorage.getItem(copyKey)||'null');if(stored&&typeof stored==='object')applyCopy(stored)}catch(e){}
+const getCopy=()=>Object.fromEntries(editable.map(e=>[e.dataset.editKey,e.innerHTML]));
+function save(){try{localStorage.setItem(copyKey,JSON.stringify(getCopy()));message('문구가 이 브라우저에 저장됐습니다.')}catch(e){message('저장할 수 없어요. JSON 내보내기를 사용하세요.')}}
+function setEdit(v){editing=v;document.body.classList.toggle('edit-mode',v);editable.forEach(e=>{e.contentEditable=String(v);e.spellcheck=false});$('#editBtn').textContent=v?'✓ 편집 끝내기':'✎ 문구 편집';if(v)message('바꾸고 싶은 문장을 직접 클릭하세요.');else save()}
+$('#editBtn').onclick=()=>setEdit(!editing);$('#saveCopy').onclick=save;
+$('#exportCopy').onclick=()=>{const blob=new Blob([JSON.stringify({project:'사이 SAI',version:'6.0',copy:getCopy()},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='train-site-copy.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);message('문구 JSON을 내려받았습니다.')};
+$('#resetCopy').onclick=()=>{if(confirm('모든 문구를 초기화할까요?')){applyCopy(originals);try{localStorage.removeItem(copyKey)}catch(e){}message('초기화했습니다.')}};
+const matched=scenes.findIndex(s=>location.hash==='#'+s.id);if(matched>0){isChanging=false;goto(matched,false)}
+scenes.forEach((s,i)=>{if(i!==current)s.setAttribute('aria-hidden','true')});scenes[current].removeAttribute('aria-hidden');
+// Layout is an illustrative concept. The linked videos are not part of an operational XR client.
+if(!motionOff)syncVideos();
+})();
+</script>
+</body>
+</html>
