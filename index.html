@@ -277,9 +277,9 @@ function ensureMedia(el,key,{forceLocal=false}={}){
  el._journeyError=()=>{
    if(el.dataset.fallback==='yes')return;
    el.dataset.fallback='yes';
-   if(f.local){el.src=f.local;el.load();if(!motionOff&&(el.closest('.scene')?.classList.contains('active')||el===window._galleryPlayer))el.play().catch(()=>{});}
+   if(f.poster){el.removeAttribute('src');el.load();el.poster=f.poster;}
    else {el.removeAttribute('src');el.load();}
-   if(el===$('#libraryPlayer'))$('#filmStatus').textContent=f.local?'LOCAL MOTION PREVIEW':'STILL / ORIGINAL VIDEO UNAVAILABLE';
+   if(el===$('#libraryPlayer'))$('#filmStatus').textContent='ORIGINAL VIDEO UNAVAILABLE';
  };
  el.addEventListener('error',el._journeyError);
  // Some restricted browsers never dispatch an error for an unreachable media URL.
@@ -288,7 +288,7 @@ function ensureMedia(el,key,{forceLocal=false}={}){
  el.dataset.fallback='no';el.src=forceLocal||!f.url?f.local||'':f.url;
  if(el.getAttribute('src'))el.load();
  if(f.url&&!forceLocal){
-   el._journeyTimeout=setTimeout(()=>{if(el.dataset.filmKey===key&&el.readyState<2&&el.dataset.fallback!=='yes')el._journeyError()},3800);
+   el._journeyTimeout=setTimeout(()=>{if(el.dataset.filmKey===key&&el.readyState<2&&el.dataset.fallback!=='yes')el._journeyError()},20000);
    el.addEventListener('loadeddata',()=>clearTimeout(el._journeyTimeout),{once:true});
  }
 }
