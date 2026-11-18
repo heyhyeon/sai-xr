@@ -57,13 +57,22 @@ body.sai-editing .page .copy.sai-selected{outline:2px solid #e2ac79!important;ou
 @media(max-width:700px){#saiPageControls{right:10px;bottom:12px}#saiPageControls button{width:38px;height:38px;font-size:21px}.sai-visit-row{gap:8px}.sai-visit-note{font-size:10px}#saiSiteOverlay .sai-site-top{padding:0 8px;gap:7px}#saiSiteOverlay .sai-site-top span.sai-site-label{display:none}}
 @media print{#saiPageControls,#saiSiteOverlay{display:none!important}}
 </style><style id="sai-single-scene-css">
-html,body{height:100%;overflow:hidden!important;overscroll-behavior:none;scroll-behavior:auto!important}
-body{position:relative}
-section.page{display:none!important;height:100svh!important;min-height:100svh!important;width:100%;overflow:hidden;position:relative}
-section.page.sai-active{display:block!important;animation:saiSlideFade .36s ease both}
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden!important;overscroll-behavior:none!important;scroll-behavior:auto!important}
+body{position:relative;margin:0!important}
+section.page{display:none!important;position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;min-height:0!important;margin:0!important;overflow:hidden!important;z-index:0}
+section.page.sai-active{display:block!important;z-index:1;animation:saiSlideFade .3s ease both}
+body:not(.sai-ready) section.page:first-of-type{display:block!important}
 @keyframes saiSlideFade{from{opacity:.55}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){section.page.sai-active{animation:none}}
-@media print{html,body{height:auto!important;overflow:visible!important}section.page{display:block!important;height:9in!important;min-height:9in!important;animation:none!important}}
+#p02 .visual.photo-ad img{object-position:center center!important;filter:contrast(1.06) saturate(.98) brightness(.99)!important;opacity:1!important;transform:scale(1.08)}
+#p02 .visual.photo-ad::after{background:linear-gradient(180deg,rgba(7,19,27,.03) 0%,rgba(7,19,27,0) 58%,rgba(7,19,27,.22) 76%,rgba(7,19,27,.82) 100%)!important}
+#p02 .frame{padding:3.2vh 3.2vw 2.6vh}
+#p02 .copy{margin-top:auto;align-self:flex-start!important;width:min(560px,52vw)!important;max-width:min(560px,52vw);padding-right:0!important;background:linear-gradient(180deg,rgba(5,11,16,0),rgba(5,11,16,.34));padding:18px 22px 20px;border-radius:14px}
+#p02 .copy h1{font-size:clamp(40px,4.5vw,74px);margin:10px 0 14px;line-height:1.16}
+#p02 .body .lead{font-size:clamp(15px,1.2vw,21px);line-height:1.64}
+#p02 .quote-mark{display:none}
+@media(max-width:800px){#p02 .copy{width:min(95vw,520px)!important;max-width:min(95vw,520px)}}
+@media print{html,body{height:auto!important;overflow:visible!important}section.page,section.page.sai-active{position:relative!important;inset:auto!important;display:block!important;width:16in!important;height:9in!important;min-height:9in!important;animation:none!important;page-break-after:always}}
 </style></head><body>
 <div id="saiSiteOverlay" role="dialog" aria-modal="true" aria-label="SAI 홈페이지 라이브 체험">
   <div class="sai-site-top"><strong>SAI</strong><span class="sai-site-label">LIVE EXPERIENCE · 기획서에서 홈페이지로</span><span class="sai-site-spacer"></span>
@@ -291,6 +300,7 @@ applySaved();setEdit(false);
  }
  window.saiSyncVideo=syncVideo;
  function render(next){
+   document.body.classList.add('sai-ready');
    index=Math.min(pages.length-1,Math.max(0,next));
    pages.forEach((p,i)=>{const active=i===index;p.classList.toggle('sai-active',active);p.setAttribute('aria-hidden',String(!active));});
    dots.forEach((dot,i)=>{dot.classList.toggle('active',i===index);dot.setAttribute('aria-current',i===index?'page':'false')});
